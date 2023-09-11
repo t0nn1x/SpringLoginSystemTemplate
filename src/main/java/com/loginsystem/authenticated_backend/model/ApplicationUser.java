@@ -20,7 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users")
-public class ApplicationUser implements UserDetails{
+public class ApplicationUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,14 +32,11 @@ public class ApplicationUser implements UserDetails{
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "user_role_junction",
-        joinColumns = {@JoinColumn(name = "user_id")},
-        inverseJoinColumns = {@JoinColumn(name = "role_id")}
-    )
+    @JoinTable(name = "user_role_junction", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+            @JoinColumn(name = "role_id") })
     private Set<Role> authorities;
 
-     public ApplicationUser() {
+    public ApplicationUser() {
         super();
         this.authorities = new HashSet<Role>();
     }
@@ -51,8 +48,6 @@ public class ApplicationUser implements UserDetails{
         this.password = password;
         this.authorities = authorities;
     }
-
-    
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -88,7 +83,7 @@ public class ApplicationUser implements UserDetails{
     public boolean isEnabled() {
         return true;
     }
-    
+
     public Integer getId() {
         return id;
     }
