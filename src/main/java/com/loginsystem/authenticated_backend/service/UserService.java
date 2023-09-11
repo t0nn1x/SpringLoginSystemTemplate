@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.loginsystem.authenticated_backend.model.ApplicationUser;
 import com.loginsystem.authenticated_backend.model.Role;
+import com.loginsystem.authenticated_backend.repository.UserRepository;
 
 @Service
 public class UserService implements UserDetailsService{
@@ -19,16 +20,15 @@ public class UserService implements UserDetailsService{
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("In the user details service");
 
-        if(!username.equals("Ethan")) throw new UsernameNotFoundException("Not Ethan");
-
-        Set<Role> roles = new HashSet<>();
-        roles.add(new Role(1, "USER"));
-
-        return new ApplicationUser(1, "Ethan", passwordEncoder.encode("password"), roles);
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User is not valid"));
     }
 
 }
