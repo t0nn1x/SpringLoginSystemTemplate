@@ -30,7 +30,10 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http
             .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+            .authorizeRequests(auth -> {
+                auth.antMatchers("/auth/**").permitAll();
+                auth.anyRequest().authenticated();
+            })
             .httpBasic().and()
             .build();
     }
