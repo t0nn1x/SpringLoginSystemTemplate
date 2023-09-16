@@ -10,4 +10,6 @@ import com.loginsystem.authenticated_backend.model.ApplicationUser;
 @Repository
 public interface UserRepository extends JpaRepository<ApplicationUser, Integer>{
     Optional<ApplicationUser> findByUsername(String username);
+    
+    boolean existsByUsername(String username);
 }
