@@ -63,8 +63,7 @@ public class SecurityConfiguration {
                 .jwt()
                 .jwtAuthenticationConverter(jwtAuthenticationConverter());
         http
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .build();
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
