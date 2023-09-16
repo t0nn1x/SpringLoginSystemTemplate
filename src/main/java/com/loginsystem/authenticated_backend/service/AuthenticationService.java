@@ -3,6 +3,8 @@ package com.loginsystem.authenticated_backend.service;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,9 +39,13 @@ public class AuthenticationService {
     @Autowired
     private TokenService tokenService;
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
+
     public ApplicationUser registerUser(String username, String password) {
 
         String encodedPassword = passwordEncoder.encode(password);
+        logger.info("Encoded password for user {}: {}", username, encodedPassword);
+
         Role userRole = roleRepository.findByAuthority("USER").get();
 
         Set<Role> authorities = new HashSet<>();
@@ -49,7 +55,16 @@ public class AuthenticationService {
         return userRepository.save(new ApplicationUser(0, username, encodedPassword, authorities));
     }
 
+    
+
     public LoginResponseDTO loginUser(String username, String password) {
+
+        ApplicationUser user = userRepository.findByUsername(username).orElse(null);
+        if (user != null) {
+            logger.info("Retrieved password for user {}: {}", username, user.getPassword());
+        } else {
+            logger.warn("User {} not found in the database.", username);
+        }
 
         try {
             Authentication auth = authenticationManager.authenticate(
